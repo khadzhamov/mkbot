@@ -12,7 +12,7 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG VERSION=dev
 
-RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -v -o /out/gbot \
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -v -o /out/kbot \
     -ldflags "-X github.com/khadzhamov/mkbot/cmd.AppVersion=${VERSION}"
 
 # CA certificates for HTTPS (Telegram API); path differs between distros

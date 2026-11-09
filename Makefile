@@ -3,10 +3,17 @@ APP := $(shell basename $(shell git remote get-url origin))
 REGISTRY := quay.io/khadzhamov
 VERSION := $(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 
-# Build configuration
-TARGETOS ?= linux
-TARGETARCH ?= arm64
-CGO_ENABLED ?= 0
+
+# Platform of the host where make is executed
+HOST_OS   := $(shell uname -s | tr '[:upper:]' '[:lower:]' | sed -E 's/^(mingw|msys|cygwin).*/windows/')
+HOST_ARCH := $(shell uname -m | sed -e 's/x86_64/amd64/' -e 's/aarch64/arm64/')
+
+# Target platform (host by default, override: make build TARGETOS=linux TARGETARCH=arm64)
+TARGETOS   ?= $(HOST_OS)
+TARGETARCH ?= $(HOST_ARCH)
+
+BINARY    := $(APP)
+IMAGE_TAG  = $(REGISTRY)/$(APP):$(VERSION)-linux-$(TARGETARCH)
 
 # Validate environment variables
 ifeq ($(TARGETOS),)
